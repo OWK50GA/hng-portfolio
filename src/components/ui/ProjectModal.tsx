@@ -1,10 +1,10 @@
 "use client";
 
-import type { HngProject } from "@/data/hng-projects";
 import { useEffect } from "react";
+import type { HngProject } from "@/data/hng-projects";
+import { GitHubIcon } from "./icons/GitHubIcon";
 import MetricRow from "./MetricRow";
 import { TechBadge } from "./TechBadge";
-import { GitHubIcon } from "./icons/GitHubIcon";
 
 function ExternalLinkIcon() {
   return (
@@ -46,18 +46,18 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
   }, []);
 
   return (
-    /* Backdrop */
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+    <dialog
+      className="fixed inset-0 z-50 m-0 flex h-full w-full max-w-full items-center justify-center bg-black/60 backdrop-blur-sm p-0 border-0"
       onClick={onClose}
-      role="dialog"
-      aria-modal="true"
+      onKeyDown={(e) => e.key === "Escape" && onClose()}
       aria-label={`${project.title} details`}
+      open
     >
-      {/* Modal panel — 50vw × 50vh, centred */}
       <div
+        role="document"
         className="relative w-[50vw] h-[50vh] overflow-y-auto rounded-xl border border-[var(--accent-teal)]/50 bg-[var(--bg-card)] p-6 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
+        onKeyDown={(e) => e.stopPropagation()}
       >
         {/* Close button */}
         <button
@@ -134,7 +134,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
           )}
         </div>
       </div>
-    </div>
+    </dialog>
   );
 }
 
