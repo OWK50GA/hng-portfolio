@@ -110,6 +110,8 @@ export interface PortfolioData {
     social: SocialLink[];
     /** Optional path to avatar image (relative to /public). Falls back to initials. */
     avatarSrc?: string;
+    /** Optional quote shown in the right half of the hero card */
+    quote?: string;
   };
   projects: HngProject[];
   deepDive: DeepDive;
@@ -127,6 +129,8 @@ export const portfolioData: PortfolioData = {
     title: "Backend Engineer",
     location: "Lagos, Nigeria",
     avatarSrc: "/basically-me.jpg",
+    quote:
+      "I build systems that hold under pressure — the kind of infrastructure work that's invisible when it works and catastrophic when it doesn't. Databases, queues, auth flows, retry engines. The parts users never see, but always feel.",
     bio: [
       "I build systems that don't fall over.",
       "APIs, reliability, and the parts users never see.",

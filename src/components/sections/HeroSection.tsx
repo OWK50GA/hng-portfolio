@@ -60,18 +60,12 @@ function Avatar({ src, name }: { src?: string; name: string }) {
 }
 
 export function HeroSection({ hero }: HeroSectionProps) {
-  // Only show github, email, linkedin in the header bar (not twitter)
-  const headerLinks = hero.social.filter((s) =>
-    ["github", "email", "linkedin"].includes(s.platform),
-  );
-
   return (
     <SectionCard accent="neutral" heading="HELLO">
-      {/* ── Main row: avatar + identity left, social links right ── */}
-      <div className="flex items-center justify-between gap-6 flex-wrap">
+      <div className="flex flex-col sm:flex-row gap-6 sm:gap-8">
 
-        {/* Left: avatar + name + role */}
-        <div className="flex items-center gap-5">
+        {/* ── Left: avatar + identity — shrinks to content ── */}
+        <div className="flex items-center gap-5 shrink-0">
           <Avatar src={hero.avatarSrc} name={hero.name} />
           <div className="flex flex-col gap-0.5">
             <h1 className="text-4xl font-bold text-[var(--text-primary)] leading-tight tracking-tight">
@@ -84,28 +78,46 @@ export function HeroSection({ hero }: HeroSectionProps) {
           </div>
         </div>
 
-        {/* Right: social links separated by · */}
-        <nav aria-label="Social links" className="flex items-center gap-0 flex-wrap">
-          {headerLinks.map((s, i) => (
-            <span key={s.platform} className="flex items-center">
-              {i > 0 && (
-                <span
-                  className="mx-3 text-[var(--border-neutral)] select-none"
-                  aria-hidden="true"
+        {/* ── Divider (visible on sm+) ── */}
+        <div className="hidden sm:block w-px bg-[var(--border-neutral)] self-stretch" aria-hidden="true" />
+
+        {/* ── Right: quote + social — takes remaining space ── */}
+        <div className="flex flex-col justify-between gap-4 flex-1">
+
+          {/* Quote */}
+          {hero.quote && (
+            <blockquote className="text-sm text-[var(--text-secondary)] leading-relaxed italic border-l-2 border-[var(--border-neutral)] pl-3">
+              "{hero.quote}"
+            </blockquote>
+          )}
+
+          {/* Social links — centred, wraps cleanly when more are added */}
+          <nav
+            aria-label="Social links"
+            className="flex items-center justify-center flex-wrap gap-x-0 gap-y-2"
+          >
+            {hero.social.map((s, i) => (
+              <span key={s.platform} className="flex items-center">
+                {i > 0 && (
+                  <span
+                    className="mx-3 text-[var(--border-neutral)] select-none"
+                    aria-hidden="true"
+                  >
+                    ·
+                  </span>
+                )}
+                <a
+                  href={s.href}
+                  className="inline-flex items-center gap-1.5 font-mono text-xs text-[var(--text-dim)] hover:text-[var(--accent-teal)] transition-colors"
                 >
-                  ·
-                </span>
-              )}
-              <a
-                href={s.href}
-                className="inline-flex items-center gap-1.5 font-mono text-xs text-[var(--text-secondary)] hover:text-[var(--accent-teal)] transition-colors"
-              >
-                <SocialIcon platform={s.platform} />
-                {s.label}
-              </a>
-            </span>
-          ))}
-        </nav>
+                  <SocialIcon platform={s.platform} />
+                  {s.label}
+                </a>
+              </span>
+            ))}
+          </nav>
+
+        </div>
       </div>
     </SectionCard>
   );

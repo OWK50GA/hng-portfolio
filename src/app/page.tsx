@@ -1,7 +1,4 @@
-// ─── Portfolio Page ──────────────────────────────────────────────────────────
-// Req 1.1: render all six sections in vertical order
-// Req 1.4: max-w-3xl centered with responsive padding
-// Req 14.1: no "use client" directive — fully static
+// ─── Portfolio Page ───────────────────────────────────────────────────────────
 
 import { BackendSkillsSection } from "@/components/sections/BackendSkillsSection";
 import { ContactSection } from "@/components/sections/ContactSection";
@@ -10,6 +7,7 @@ import { FeaturedDeepDiveSection } from "@/components/sections/FeaturedDeepDiveS
 import { HeroSection } from "@/components/sections/HeroSection";
 import { HngProjectsSection } from "@/components/sections/HngProjectsSection";
 import { LearningReflectionSection } from "@/components/sections/LearningReflectionSection";
+import { SectionNav } from "@/components/SectionNav";
 import { portfolioData } from "@/data/hng-projects";
 
 export default function Page() {
@@ -19,13 +17,37 @@ export default function Page() {
   return (
     <main className="min-h-screen bg-[var(--bg-base)] py-8 sm:py-12 lg:py-16">
       <div className="w-full space-y-6 px-4 sm:px-8 md:px-12 lg:px-16 xl:px-24">
+
+        {/* Hero — no section id needed, it's the top */}
         <HeroSection hero={hero} />
-        <HngProjectsSection projects={projects} />
-        <FeaturedDeepDiveSection deepDive={deepDive} />
-        <DesignDocsSection docs={designDocs} />
-        <BackendSkillsSection skills={skills} />
-        <LearningReflectionSection reflections={reflections} />
-        <ContactSection social={contact} />
+
+        {/* Section navigation bar */}
+        <SectionNav />
+
+        <section id="projects">
+          <HngProjectsSection projects={projects} />
+        </section>
+
+        <section id="deep-dive">
+          <FeaturedDeepDiveSection deepDive={deepDive} />
+        </section>
+
+        <section id="design-docs">
+          <DesignDocsSection docs={designDocs} />
+        </section>
+
+        <section id="skills">
+          <BackendSkillsSection skills={skills} />
+        </section>
+
+        <section id="reflections">
+          <LearningReflectionSection reflections={reflections} />
+        </section>
+
+        <section id="contact">
+          <ContactSection social={contact} />
+        </section>
+
       </div>
     </main>
   );
