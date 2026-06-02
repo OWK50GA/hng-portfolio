@@ -17,7 +17,7 @@ export function HngProjectsSection({ projects }: HngProjectsSectionProps) {
       accent="teal"
       heading="HNG PROJECTS"
       headingSize="lg"
-      subtitle="one card per stage, sorted by stage"
+      subtitle="projects and subprojects carried out individually and in a team"
     >
       {/* Full-depth project cards grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
