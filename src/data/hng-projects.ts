@@ -27,6 +27,7 @@ export interface HngProject {
   stage: string;
   /** Human-readable title */
   title: string;
+  summary: string;
   /** 1–3 sentence description of the work */
   description: string;
   /** Tech stack labels shown as TechBadge pills */
@@ -37,6 +38,7 @@ export interface HngProject {
   metrics?: Metric[];
   /** Optional: score or outcome note */
   scoreNote?: string;
+  type: "individual" | "team";
 }
 
 // ─── Featured Deep Dive ──────────────────────────────────────────────────────
@@ -138,17 +140,17 @@ export const portfolioData: PortfolioData = {
     social: [
       {
         platform: "github",
-        href: "https://github.com/wilfrid-k",
+        href: "https://github.com/OWK50GA",
         label: "GitHub",
       },
       {
         platform: "linkedin",
-        href: "https://www.linkedin.com/in/wilfrid-okorie/",
+        href: "https://www.linkedin.com/in/wilfrid-okorie-072685232",
         label: "LinkedIn",
       },
       {
         platform: "email",
-        href: "mailto:wilfridkenneth98@gmail.com",
+        href: "mailto:wilfridokorie@gmail.com",
         label: "Email",
       },
     ],
@@ -157,95 +159,124 @@ export const portfolioData: PortfolioData = {
   projects: [
     // ── Full-depth cards ──────────────────────────────────────────────────
     {
+      stage: "0",
+      depth: "full",
+      title: "Name Classification API",
+      summary: "A single GET endpoint that calls the Genderize API, processes the response, and returns a structured classification with confidence scoring.",
+      description: "Built a REST API endpoint that accepts a name query parameter, calls the external Genderize API, and returns a processed response including gender, probability, sample size, and a computed is_confident flag — true only when probability ≥ 0.7 and sample size ≥ 100. Handled edge cases including null gender responses, zero counts, upstream failures, and CORS. First production-style API with strict response contracts and automated grading.",
+      tech: ["Node.js", "Express.js"],
+      type: "individual",
+    },
+    {
+      stage: "1",
+      depth: "full",
+      title: "Demographic Profile Builder",
+      summary: "A multi-API integration that builds and persists demographic profiles by combining gender, age, and nationality predictions for any given name.",
+      description: "Extended Stage 0 by integrating three external APIs simultaneously — Genderize, Agify, and Nationalize. For each name, the system fetches gender probability, predicted age, and top nationality, applies classification logic (age groups: child/teenager/adult/senior), and persists the result to a database. Implemented idempotency so duplicate names return the existing record rather than creating new entries. Added full CRUD endpoints with filtering by gender, country, and age group.",
+      tech: ["Node.js", "Express.js", "PostgreSQL"],
+      type: "individual",
+    },
+    {
       stage: "2",
       depth: "full",
-      title: "Filtering, sorting, pagination — NL parsing",
+      title: "Intelligence Query Engine",
+      summary: "Advanced querying layer over the demographic dataset with filtering, sorting, pagination, and a rule-based natural language search endpoint.",
       description:
-        "First real backend: built query engine with natural-language parameter parsing, full sort/filter/paginate pipeline on PostgreSQL.",
-      tech: ["Node.js", "PostgreSQL"],
+        `Upgraded the profile system into a proper query engine for Insighta Labs, a fictional demographic intelligence company. Implemented combined multi-field filtering (gender, age range, country, probability thresholds), multi-field sorting, and cursor-based pagination — all combinable in a single request. The centrepiece was a rule-based natural language parser: plain English queries like "young males from Nigeria" are parsed into structured filters without any AI or LLMs. Seeded the database with 2,026 profiles from a provided JSON file. First stage that felt like real backend engineering`,
+      tech: ["Node.js", "Express.js", "PostgreSQL"],
+      type: "individual"
     },
     {
       stage: "3",
       depth: "full",
-      title: "GitHub OAuth · PKCE · RBAC",
+      title: "Secure Platform: Auth, RBAC & Multi-Interface Access",
+      summary: "Full authentication system with GitHub OAuth PKCE, role-based access control, a globally installable CLI tool, and a web portal — all talking to the same backend.",
       description:
-        "Auth system covering OAuth PKCE flow, JWT rotation, role-based access control, rate limiting, and a CLI + web portal. Missed the TRD. Score: 74/100.",
+        "Transformed the profile system into a multi-interface platform with real security. Implemented GitHub OAuth with PKCE flow for both CLI and browser clients, short-lived access tokens with refresh token rotation, and role-based access control enforcing admin vs. analyst permissions across every endpoint. Built a globally installable CLI tool persisting credentials at ~/.insighta/credentials.json, a web portal with HTTP-only cookies and CSRF protection, API versioning, CSV export, rate limiting, and request logging. Three separate repos (backend, CLI, web portal) all integrated to the same system. Score: 76/100 — the hardest stage personally.",
       tech: ["GitHub OAuth", "PKCE", "RBAC"],
-      scoreNote: "74/100",
+      type: "individual"
     },
     {
       stage: "4b",
       depth: "full",
-      title: "Indexing · Caching · CSV Ingest",
+      title: "Query Optimization & CSV Ingestion",
+      summary: "Implemented the design doc written in RFC 001 - reduced P95 query latency from 1200ms+ to 230ms, cached routes hitting 70ms, and built a streaming CSV ingestion pipeline handling up to 500,000 rows per file.",
       description:
-        "Query optimisation dropped cold query time from 1200ms to 230ms. Redis cache layer brought cached hits to 70ms. Canonical query normalisation for consistent cache keys.",
+        `Implementation stage for the scale design. Optimized query execution through composite indexing, Redis caching, canonical query normalization (so "Nigerian females 20–45" and "Women aged 20–45 from Nigeria" map to the same cache key), query restructuring, and connection pooling. Cold queries dropped from 1200ms+ to 230ms; cached hits to 70ms. Also built a large-scale CSV ingestion endpoint handling files up to 500,000 rows via streaming and chunked processing — no full file loads into memory, concurrent uploads supported, partial failure handling with per-row skip logic and a summary response. Existing API contracts stayed unchanged throughout.`,
       tech: ["Indexing", "Caching", "Redis"],
-      metrics: [
-        { label: "cold query", before: "1200ms", after: "230ms" },
-        { label: "cached hit", before: "—", after: "70ms" },
-        { label: "DB load", before: "high", after: "−40%" },
-      ],
+      // metrics: [
+      //   { label: "cold query", before: "1200ms", after: "230ms" },
+      //   { label: "cached hit", before: "—", after: "70ms" },
+      //   { label: "DB load", before: "high", after: "−40%" },
+      // ],
+      type: "individual"
     },
     {
       stage: "5",
       depth: "full",
-      title: "Redis pub/sub · SSE",
+      title: "Real-Time Inverter Streaming (EnergyIQ)",
+      summary: "Replaced frontend polling with an event-driven architecture using Redis pub/sub and SSE, so inverter data pushes to clients in real time.",
       description:
-        "Replaced polling with event-driven architecture: Redis pub/sub channels feeding Server-Sent Events to clients.",
+        `For EnergyIQ — a solar inverter monitoring platform — the original design had the frontend polling the backend, which in turn polled external inverter APIs (Victron, Growatt, Deye/Sunsynk) on every request. Replaced this with a proper event-driven flow: a single background polling service fetches inverter data and publishes updates to Redis channels named by inverter ID. An SSE endpoint lets each client open a persistent connection and subscribe to their inverter's channel, receiving updates as they arrive. Wrote the RFC before touching any code, documented the divergences during implementation, and handled the "curveball" scope change under deadline pressure in Stage 5b.`,
       tech: ["Redis pub/sub", "SSE"],
+      type: "team",
     },
     {
       stage: "6",
       depth: "full",
-      title: "Pattern pub/sub · Alert detection",
+      title: " Inverter Alert Detection System (Team)",
+      summary: "An alert detection service that listens to all inverter data streams via Redis pattern pub/sub, checks for anomalies, and notifies users when something goes wrong.",
       description:
-        "Alert detection service subscribed to Inserter.* Redis channel pattern. Honest about team task-division issues this stage.",
+        "Team stage built on top of the Stage 5 streaming architecture. Implemented an AlertDetectionService subscribed to the inverter:* Redis pattern channel — meaning it receives every inverter update across all users. On each message, the service inspects the data payload for abnormal readings (voltage out of range, battery critically low, unexpected status codes), and dispatches alerts to the relevant user if thresholds are breached. Integrated with the existing SSE and notification infrastructure. Delivered working implementation with tests, structured logging, and edge case documentation. Personal lesson: not dividing the team task well upfront meant carrying most of the implementation alone — resulted in scrappy work near deadline.",
       tech: ["Pattern pub/sub"],
+      type: "team",
     },
     {
       stage: "8a",
       depth: "full",
-      title: "Worker loop · Exponential backoff",
+      title: "Retry Engine",
+      summary: "An HTTP service that accepts outbound requests, retries them on failure using exponential backoff with jitter, and tracks every attempt — never retrying on 4xx, dead-lettering at max retries.",
       description:
-        "Retry engine with jitter, dead-letter queue, and 4xx terminal logic. SQLite-backed worker with configurable backoff parameters.",
+        " Built a resilience layer for unreliable external API calls. POST /request returns immediately with a pending ID; a background worker loop (waking every ~500ms) picks up due requests and executes them. Backoff doubles each retry (1s → 2s → 4s → 8s → 16s) with per-attempt jitter in the [0.8, 1.2) range. Retries on 5xx responses, timeouts, and network errors; 4xx responses are terminal and never retried. Full attempt history is persisted alongside each request record. Requests that exhaust maxRetries are dead-lettered and never touched again. Spent more time thinking through the design than writing the code — and it showed in the implementation.",
       tech: ["SQLite", "Exponential backoff"],
+      type: "individual"
     },
     // ── Compact pill stages ───────────────────────────────────────────────
-    {
-      stage: "0",
-      depth: "pill",
-      title: "Orientation",
-      description: "",
-      tech: [],
-    },
-    {
-      stage: "1",
-      depth: "pill",
-      title: "Basic CRUD",
-      description: "",
-      tech: [],
-    },
-    {
-      stage: "4a",
-      depth: "pill",
-      title: "Design doc",
-      description: "",
-      tech: [],
-    },
-    {
-      stage: "5b",
-      depth: "pill",
-      title: "RFC / curveball",
-      description: "",
-      tech: [],
-    },
-    {
-      stage: "7b",
-      depth: "pill",
-      title: "This portfolio (spec)",
-      description: "",
-      tech: [],
-    },
+    // {
+    //   stage: "0",
+    //   depth: "pill",
+    //   title: "Orientation",
+    //   description: "",
+    //   tech: [],
+    // },
+    // {
+    //   stage: "1",
+    //   depth: "pill",
+    //   title: "Basic CRUD",
+    //   description: "",
+    //   tech: [],
+    // },
+    // {
+    //   stage: "4a",
+    //   depth: "pill",
+    //   title: "Design doc",
+    //   description: "",
+    //   tech: [],
+    // },
+    // {
+    //   stage: "5b",
+    //   depth: "pill",
+    //   title: "RFC / curveball",
+    //   description: "",
+    //   tech: [],
+    // },
+    // {
+    //   stage: "7b",
+    //   depth: "pill",
+    //   title: "This portfolio (spec)",
+    //   description: "",
+    //   tech: [],
+    // },
   ],
 
   deepDive: {
