@@ -1,26 +1,45 @@
+/* src/app/globals.css — complete token set */
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Base surfaces */
+  --bg-base: #0d0d0d; /* page background */
+  --bg-card: #111111; /* default section card */
+  --bg-card-tint: #0f1a18; /* project cards (subtle teal tint) */
+
+  /* Accent colours — two only */
+  --accent-teal: #2dd4bf; /* primary: backend/technical identity */
+  --accent-amber: #fb923c; /* secondary: learning reflection (one warm moment) */
+
+  /* Neutral border — used by hero, skills, contact */
+  --border-neutral: #2a2a2a;
+
+  /* Text */
+  --text-primary: #f0f0f0; /* headings, key values */
+  --text-secondary: #9ca3af; /* body, muted labels */
+  --text-dim: #6b7280; /* pill text, meta */
+
+  /* Accent fills — low-opacity tinted backgrounds for sub-boxes */
+  --fill-teal: rgba(45, 212, 191, 0.06);
+  --fill-amber: rgba(251, 146, 60, 0.07);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-background: var(--bg-base);
+  --color-card: var(--bg-card);
+  --color-card-tint: var(--bg-card-tint);
+
+  --color-accent-teal: var(--accent-teal);
+  --color-accent-amber: var(--accent-amber);
+  --color-border-neutral: var(--border-neutral);
+
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-dim: var(--text-dim);
+
+  --color-fill-teal: var(--fill-teal);
+  --color-fill-amber: var(--fill-amber);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }
