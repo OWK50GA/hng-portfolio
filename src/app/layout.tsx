@@ -13,10 +13,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Wilfrid Okorie — Backend Engineer",
+  title: "Wilfrid Okorie - Backend Engineer",
   description:
     "Portfolio of backend engineering work from the HNG internship: " +
-    "auth systems, query optimisation, Redis pub/sub, retry engines, and more.",
+    "System architect. Design Engineer. Optimization expert",
 };
 
 export default function RootLayout({
