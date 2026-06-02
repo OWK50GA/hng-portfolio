@@ -108,6 +108,8 @@ export interface PortfolioData {
     location: string;
     bio: string[];
     social: SocialLink[];
+    /** Optional path to avatar image (relative to /public). Falls back to initials. */
+    avatarSrc?: string;
   };
   projects: HngProject[];
   deepDive: DeepDive;
@@ -124,6 +126,7 @@ export const portfolioData: PortfolioData = {
     name: "Wilfrid Okorie",
     title: "Backend Engineer",
     location: "Lagos, Nigeria",
+    avatarSrc: "/basically-me.jpg",
     bio: [
       "I build systems that don't fall over.",
       "APIs, reliability, and the parts users never see.",
