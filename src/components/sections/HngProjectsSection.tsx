@@ -1,9 +1,6 @@
 // ─── HngProjectsSection ──────────────────────────────────────────────────────
-// Req 9.1: full-depth in responsive grid, pill-depth in flex-wrap pill row
-// Req 9.2: teal SectionAccent
-// Req 9.3: 6 ProjectCards + 5 StagePills from static data
 
-import { ProjectCard } from "@/components/ui/ProjectCard";
+import { ProjectCardClient } from "@/components/ui/ProjectCardClient";
 import { SectionCard } from "@/components/ui/SectionCard";
 import { partitionProjects, StagePill } from "@/components/ui/StagePill";
 import type { HngProject } from "@/data/hng-projects";
@@ -19,12 +16,13 @@ export function HngProjectsSection({ projects }: HngProjectsSectionProps) {
     <SectionCard
       accent="teal"
       heading="HNG PROJECTS"
+      headingSize="lg"
       subtitle="one card per stage, sorted by stage"
     >
       {/* Full-depth project cards grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {cards.map((project) => (
-          <ProjectCard key={project.stage} project={project} />
+          <ProjectCardClient key={project.stage} project={project} />
         ))}
       </div>
 

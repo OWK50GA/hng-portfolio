@@ -33,6 +33,8 @@ export function accentClasses(accent: SectionAccent): {
 interface SectionCardProps {
   accent: SectionAccent;
   heading: string;
+  /** "sm" = default label style, "lg" = larger, full-brightness heading */
+  headingSize?: "sm" | "lg";
   subtitle?: string;
   children: React.ReactNode;
   className?: string;
@@ -41,11 +43,17 @@ interface SectionCardProps {
 export function SectionCard({
   accent,
   heading,
+  headingSize = "sm",
   subtitle,
   children,
   className,
 }: SectionCardProps) {
   const { border, labelColor } = accentClasses(accent);
+
+  const headingClass =
+    headingSize === "lg"
+      ? `font-mono uppercase tracking-widest text-base font-semibold ${labelColor}`
+      : `font-mono uppercase tracking-widest text-xs opacity-70 ${labelColor}`;
 
   return (
     <div
@@ -59,11 +67,7 @@ export function SectionCard({
     >
       {/* Label bar */}
       <div className="mb-4 flex items-center gap-2">
-        <span
-          className={`font-mono uppercase tracking-widest text-xs opacity-70 ${labelColor}`}
-        >
-          {heading}
-        </span>
+        <span className={headingClass}>{heading}</span>
         {subtitle && (
           <>
             <span className="font-mono text-xs opacity-40 text-[var(--text-dim)]">
