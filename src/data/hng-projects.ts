@@ -79,6 +79,26 @@ export interface SocialLink {
   label: string;
 }
 
+// ─── Design Doc (RFC / System Design) ───────────────────────────────────────
+
+export type DocConcept =
+  | "RFC"
+  | "System Design"
+  | "Architecture"
+  | "API Design"
+  | "Data Model";
+
+export interface DesignDoc {
+  /** Short document title */
+  title: string;
+  /** Document concept / type */
+  concept: DocConcept;
+  /** External link to the document (Google Docs, Notion, GitHub, etc.) */
+  link: string;
+  /** Full description — shown truncated on card, expanded in modal */
+  description: string;
+}
+
 // ─── Root data shape ─────────────────────────────────────────────────────────
 
 export interface PortfolioData {
@@ -92,6 +112,7 @@ export interface PortfolioData {
   projects: HngProject[];
   deepDive: DeepDive;
   skills: SkillGroup[];
+  designDocs: DesignDoc[];
   reflections: ReflectionEntry[];
   contact: SocialLink[];
 }
@@ -273,6 +294,37 @@ export const portfolioData: PortfolioData = {
         "worker loops",
         "Redis pub/sub",
       ],
+    },
+  ],
+
+  designDocs: [
+    {
+      title: "RFC-001: Canonical Query Normalisation for Cache Key Consistency",
+      concept: "RFC",
+      link: "https://github.com/wilfrid-k",
+      description:
+        "This RFC proposes a canonical query normalisation strategy to address cache key fragmentation in the filtered/sorted API endpoints. The core problem is that semantically identical queries — differing only in parameter ordering or whitespace — generate distinct cache keys, resulting in near-zero Redis cache hit rates despite a correctly configured cache layer. The proposal defines a deterministic normalisation algorithm: sort query parameters alphabetically, strip leading and trailing whitespace from both keys and values, and lower-case all keys before hashing. The document covers the failure mode in depth, presents benchmark data showing cache hit rates below 5% before the fix, and argues why normalisation at the application layer (rather than at the cache or database layer) is the correct boundary. It also addresses edge cases: boolean coercion, array parameters, and pagination tokens that must not be normalised. The RFC concludes with a migration plan and a rollout strategy that allows gradual adoption without invalidating existing cache entries.",
+    },
+    {
+      title: "RFC-002: Event-Driven Alert Detection via Redis Pattern Subscriptions",
+      concept: "RFC",
+      link: "https://github.com/wilfrid-k",
+      description:
+        "This RFC designs the alert detection subsystem for Stage 6, replacing a polling-based approach with a Redis pattern subscription architecture. The document opens with a critique of the existing polling loop: fixed 500ms intervals created unnecessary database load under low-event conditions and introduced unacceptable latency spikes under high-event conditions. The proposed design subscribes the alert service to the `Inserter.*` Redis channel pattern, allowing it to react to any event published by the Inserter service family without coupling the two services directly. The RFC specifies the message envelope schema, the deduplication window (5-second sliding window backed by a Redis sorted set), and the dead-letter strategy for events that fail alert evaluation. A separate section covers operational concerns: how to drain the subscription queue on graceful shutdown, how to handle Redis reconnection, and how to emit structured logs for each alert evaluation cycle. The RFC also documents the team task-division issue encountered during implementation and what was deliberately descoped.",
+    },
+    {
+      title: "RFC-003: Retry Engine with Exponential Backoff and Dead-Letter Queue",
+      concept: "RFC",
+      link: "https://github.com/wilfrid-k",
+      description:
+        "This RFC specifies the retry engine built during Stage 8a. The document starts from first principles: why naive immediate retries are harmful (thundering herd, cascading failures), and why a well-designed retry system needs three things — bounded retry count, randomised backoff with jitter, and a terminal state for permanently failed jobs. The proposed engine uses full jitter exponential backoff (base 200ms, multiplier 2×, cap 30s, ±25% jitter), a configurable maximum retry count per job type, and 4xx terminal logic that immediately moves non-retriable HTTP errors to the dead-letter queue without consuming retry budget. The RFC defines the SQLite schema for the worker state table, the tick interval for the worker loop, and the concurrency model (single-process, single-thread, explicit serialisation). It also covers the dead-letter queue consumer contract: what metadata is preserved, how to replay a dead-lettered job manually, and how to emit alerting signals when the DLQ depth crosses a threshold. Appendices include the full backoff formula and a comparison against three alternative libraries that were evaluated and rejected.",
+    },
+    {
+      title: "RFC-004: PKCE OAuth Flow with JWT Rotation and RBAC Policy Engine",
+      concept: "RFC",
+      link: "https://github.com/wilfrid-k",
+      description:
+        "This RFC documents the authentication and authorisation system designed and implemented in Stage 3. It covers the full GitHub OAuth PKCE flow from code challenge generation through token exchange, explains why PKCE was chosen over implicit flow for the CLI client (no redirect URI), and specifies the JWT rotation strategy: short-lived access tokens (15 minutes), long-lived refresh tokens (7 days) stored as opaque references in the database, and automatic rotation on every refresh. The RBAC section defines the policy model: roles are hierarchical, permissions are additive, and a central policy engine evaluates every protected route before handler execution. The RFC includes the full permission matrix for the three built-in roles (viewer, editor, admin), the rate limiting strategy (per-IP sliding window for auth endpoints, per-user token bucket for API endpoints), and the bcrypt work factor selection rationale. A post-mortem section documents the Technical Requirements Document that was missed during submission and what would have been done differently.",
     },
   ],
 
