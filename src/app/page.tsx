@@ -5,6 +5,7 @@
 
 import { BackendSkillsSection } from "@/components/sections/BackendSkillsSection";
 import { ContactSection } from "@/components/sections/ContactSection";
+import { DesignDocsSection } from "@/components/sections/DesignDocsSection";
 import { FeaturedDeepDiveSection } from "@/components/sections/FeaturedDeepDiveSection";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { HngProjectsSection } from "@/components/sections/HngProjectsSection";
@@ -12,7 +13,7 @@ import { LearningReflectionSection } from "@/components/sections/LearningReflect
 import { portfolioData } from "@/data/hng-projects";
 
 export default function Page() {
-  const { hero, projects, deepDive, skills, reflections, contact } =
+  const { hero, projects, deepDive, skills, designDocs, reflections, contact } =
     portfolioData;
 
   return (
@@ -21,6 +22,7 @@ export default function Page() {
         <HeroSection hero={hero} />
         <HngProjectsSection projects={projects} />
         <FeaturedDeepDiveSection deepDive={deepDive} />
+        <DesignDocsSection docs={designDocs} />
         <BackendSkillsSection skills={skills} />
         <LearningReflectionSection reflections={reflections} />
         <ContactSection social={contact} />
