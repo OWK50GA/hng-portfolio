@@ -1,7 +1,7 @@
 "use client";
 
-import type { DeepDive } from "@/data/hng-projects";
 import { useEffect } from "react";
+import type { DeepDive } from "@/data/hng-projects";
 
 // Panels now match the fields that exist on DeepDive
 export type DeepDivePanel = "background" | "problem" | "whatChanged";
@@ -18,7 +18,11 @@ const PANEL_TITLES: Record<DeepDivePanel, string> = {
   whatChanged: "What Changed",
 };
 
-export function DeepDiveModal({ deepDive, panel, onClose }: DeepDiveModalProps) {
+export function DeepDiveModal({
+  deepDive,
+  panel,
+  onClose,
+}: DeepDiveModalProps) {
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -35,16 +39,18 @@ export function DeepDiveModal({ deepDive, panel, onClose }: DeepDiveModalProps) 
   }, []);
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+    <dialog
+      className="fixed inset-0 z-50 m-0 flex h-full w-full max-w-full items-center justify-center bg-black/60 backdrop-blur-sm p-0 border-0"
       onClick={onClose}
-      role="dialog"
-      aria-modal="true"
+      onKeyDown={(e) => e.key === "Escape" && onClose()}
       aria-label={PANEL_TITLES[panel]}
+      open
     >
       <div
+        role="document"
         className="relative w-[50vw] h-[50vh] overflow-y-auto rounded-xl border border-[var(--accent-teal)]/50 bg-[var(--bg-card)] p-6 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
+        onKeyDown={(e) => e.stopPropagation()}
       >
         <button
           type="button"
@@ -67,7 +73,7 @@ export function DeepDiveModal({ deepDive, panel, onClose }: DeepDiveModalProps) 
           {deepDive[panel]}
         </p>
       </div>
-    </div>
+    </dialog>
   );
 }
 

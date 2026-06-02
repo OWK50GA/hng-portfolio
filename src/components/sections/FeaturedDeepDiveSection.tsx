@@ -20,7 +20,9 @@ function Block({ label, content }: { label: string; content: string }) {
   );
 }
 
-export function FeaturedDeepDiveSection({ deepDive }: FeaturedDeepDiveSectionProps) {
+export function FeaturedDeepDiveSection({
+  deepDive,
+}: FeaturedDeepDiveSectionProps) {
   return (
     <SectionCard
       accent="teal-dim"

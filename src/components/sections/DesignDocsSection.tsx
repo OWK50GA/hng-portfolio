@@ -2,10 +2,10 @@
 
 // ─── DesignDocsSection ───────────────────────────────────────────────────────
 
+import { useState } from "react";
 import { DesignDocModal } from "@/components/ui/DesignDocModal";
 import { SectionCard } from "@/components/ui/SectionCard";
 import type { DesignDoc } from "@/data/hng-projects";
-import { useState } from "react";
 
 interface DesignDocsSectionProps {
   docs: DesignDoc[];

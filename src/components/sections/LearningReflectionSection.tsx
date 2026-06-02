@@ -4,7 +4,6 @@
 // Req 12.3: amber SectionAccent (only section with amber)
 
 import { SectionCard } from "@/components/ui/SectionCard";
-import { StagePill } from "@/components/ui/StagePill";
 import type { ReflectionEntry } from "@/data/hng-projects";
 
 interface LearningReflectionSectionProps {
@@ -24,11 +23,8 @@ export function LearningReflectionSection({
         {reflections.map((entry) => (
           <div key={entry.text.slice(0, 50)}>
             {entry.stageRef && (
-              <span className="inline-block mb-1.5">
-                <StagePill
-                  stage={entry.stageRef}
-                  label={`Stage ${entry.stageRef}`}
-                />
+              <span className="inline-flex items-center mb-1.5 font-mono text-xs text-[var(--accent-amber)] border border-[var(--accent-amber)]/30 rounded-full px-2.5 py-1">
+                Stage {entry.stageRef}
               </span>
             )}
             <p className="text-sm text-[var(--text-secondary)]">{entry.text}</p>

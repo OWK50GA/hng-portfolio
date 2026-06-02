@@ -1,11 +1,11 @@
 "use client";
 
-import type { HngProject } from "@/data/hng-projects";
 import { useState } from "react";
+import type { HngProject } from "@/data/hng-projects";
+import { GitHubIcon } from "./icons/GitHubIcon";
 import MetricRow from "./MetricRow";
 import { ProjectModal } from "./ProjectModal";
 import { TechBadge } from "./TechBadge";
-import { GitHubIcon } from "./icons/GitHubIcon";
 
 // Simple external link icon (no extra dependency)
 function ExternalLinkIcon() {
@@ -100,7 +100,9 @@ export function ProjectCardClient({ project }: ProjectCardClientProps) {
         </div>
       </article>
 
-      {open && <ProjectModal project={project} onClose={() => setOpen(false)} />}
+      {open && (
+        <ProjectModal project={project} onClose={() => setOpen(false)} />
+      )}
     </>
   );
 }

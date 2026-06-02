@@ -35,7 +35,11 @@ function Avatar({ src, name }: { src?: string; name: string }) {
 
   if (src) {
     return (
-      <div className={`${base} relative`} role="img" aria-label={`${name} avatar`}>
+      <div
+        className={`${base} relative`}
+        role="img"
+        aria-label={`${name} avatar`}
+      >
         <Image
           src={src}
           alt={`${name} avatar`}
@@ -63,7 +67,6 @@ export function HeroSection({ hero }: HeroSectionProps) {
   return (
     <SectionCard accent="neutral" heading="HELLO">
       <div className="flex flex-col sm:flex-row gap-6 sm:gap-8">
-
         {/* ── Left: avatar + identity — shrinks to content ── */}
         <div className="flex items-center gap-5 shrink-0">
           <Avatar src={hero.avatarSrc} name={hero.name} />
@@ -79,11 +82,13 @@ export function HeroSection({ hero }: HeroSectionProps) {
         </div>
 
         {/* ── Divider (visible on sm+) ── */}
-        <div className="hidden sm:block w-px bg-[var(--border-neutral)] self-stretch" aria-hidden="true" />
+        <div
+          className="hidden sm:block w-px bg-[var(--border-neutral)] self-stretch"
+          aria-hidden="true"
+        />
 
         {/* ── Right: quote + social — takes remaining space ── */}
         <div className="flex flex-col justify-between gap-4 flex-1">
-
           {/* Quote */}
           {hero.quote && (
             <blockquote className="text-sm text-[var(--text-secondary)] leading-relaxed italic border-l-2 border-[var(--border-neutral)] pl-3">
@@ -116,7 +121,6 @@ export function HeroSection({ hero }: HeroSectionProps) {
               </span>
             ))}
           </nav>
-
         </div>
       </div>
     </SectionCard>
