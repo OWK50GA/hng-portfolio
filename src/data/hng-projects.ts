@@ -395,22 +395,22 @@ export const portfolioData: PortfolioData = {
   contact: [
     {
       platform: "github",
-      href: "https://github.com/wilfrid-k",
+      href: "https://github.com/OWK50GA",
       label: "GitHub",
     },
     {
       platform: "linkedin",
-      href: "https://www.linkedin.com/in/wilfrid-okorie/",
+      href: "https://www.linkedin.com/in/wilfrid-okorie-072685232",
       label: "LinkedIn",
     },
     {
       platform: "email",
-      href: "mailto:wilfridkenneth98@gmail.com",
+      href: "mailto:wilfridokorie@gmail.com",
       label: "Email",
     },
     {
       platform: "twitter",
-      href: "https://x.com/wilfrid_k",
+      href: "https://x.com/WilfridOkorie",
       label: "Twitter",
     },
   ],
