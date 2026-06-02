@@ -1,10 +1,6 @@
 // ─── HeroSection ─────────────────────────────────────────────────────────────
-// Req 8.1: displays name, title, location, both bio lines, and all social links
-// Req 8.2: avatar with "WO" initials fallback
-// Req 8.3: avatar aria-label
-// Req 8.4: neutral SectionAccent
-// Req 15.1: single <h1> for engineer name
 
+import Image from "next/image";
 import {
   EmailIcon,
   GitHubIcon,
@@ -33,47 +29,95 @@ function SocialIcon({ platform }: { platform: string }) {
   }
 }
 
+function Avatar({ src, name }: { src?: string; name: string }) {
+  const base =
+    "rounded-full border-2 border-[var(--border-neutral)] w-24 h-24 shrink-0 overflow-hidden";
+
+  if (src) {
+    return (
+      <div className={`${base} relative`} role="img" aria-label={`${name} avatar`}>
+        <Image
+          src={src}
+          alt={`${name} avatar`}
+          fill
+          className="object-cover"
+          sizes="96px"
+          priority
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className={`${base} bg-[var(--bg-card)] flex items-center justify-center font-mono text-lg text-[var(--text-dim)]`}
+      role="img"
+      aria-label={`${name} avatar`}
+    >
+      WO
+    </div>
+  );
+}
+
 export function HeroSection({ hero }: HeroSectionProps) {
   return (
     <SectionCard accent="neutral" heading="HELLO">
-      <div className="flex items-start gap-5">
-        {/* Avatar */}
-        <div
-          className="rounded-full bg-[var(--bg-card)] border border-[var(--border-neutral)] w-14 h-14 flex items-center justify-center font-mono text-sm text-[var(--text-dim)] shrink-0"
-          role="img"
-          aria-label="Wilfrid Okorie avatar"
-        >
-          WO
-        </div>
+      <div className="flex flex-col sm:flex-row gap-6 sm:gap-8">
 
-        {/* Name + bio */}
-        <div className="flex flex-col gap-1">
-          <h1 className="text-[2rem] font-bold text-[var(--text-primary)] leading-tight">
-            {hero.name}
-          </h1>
-          <p className="text-sm text-[var(--text-secondary)]">
-            {hero.title} · {hero.location}
-          </p>
-          {hero.bio.map((line) => (
-            <p key={line} className="text-sm text-[var(--text-secondary)]">
-              {line}
+        {/* ── Left: avatar + identity — shrinks to content ── */}
+        <div className="flex items-center gap-5 shrink-0">
+          <Avatar src={hero.avatarSrc} name={hero.name} />
+          <div className="flex flex-col gap-0.5">
+            <h1 className="text-4xl font-bold text-[var(--text-primary)] leading-tight tracking-tight">
+              {hero.name}
+            </h1>
+            <p className="text-base text-[var(--text-secondary)] font-medium">
+              {hero.title}
             </p>
-          ))}
+            <p className="text-sm text-[var(--text-dim)]">{hero.location}</p>
+          </div>
         </div>
-      </div>
 
-      {/* Social links */}
-      <div className="flex flex-row flex-wrap gap-4 mt-4">
-        {hero.social.map((s) => (
-          <a
-            key={s.platform}
-            href={s.href}
-            className="inline-flex items-center gap-1.5 font-mono text-xs text-[var(--accent-teal)] hover:text-[var(--text-primary)] transition-colors"
+        {/* ── Divider (visible on sm+) ── */}
+        <div className="hidden sm:block w-px bg-[var(--border-neutral)] self-stretch" aria-hidden="true" />
+
+        {/* ── Right: quote + social — takes remaining space ── */}
+        <div className="flex flex-col justify-between gap-4 flex-1">
+
+          {/* Quote */}
+          {hero.quote && (
+            <blockquote className="text-sm text-[var(--text-secondary)] leading-relaxed italic border-l-2 border-[var(--border-neutral)] pl-3">
+              "{hero.quote}"
+            </blockquote>
+          )}
+
+          {/* Social links — centred, wraps cleanly when more are added */}
+          <nav
+            aria-label="Social links"
+            className="flex items-center justify-center flex-wrap gap-x-0 gap-y-2"
           >
-            <SocialIcon platform={s.platform} />
-            {s.label}
-          </a>
-        ))}
+            {hero.social.map((s, i) => (
+              <span key={s.platform} className="flex items-center">
+                {i > 0 && (
+                  <span
+                    className="mx-3 text-[var(--border-neutral)] select-none"
+                    aria-hidden="true"
+                  >
+                    ·
+                  </span>
+                )}
+                <a
+                  href={s.href}
+                  className="inline-flex items-center gap-1.5 font-mono text-xs text-[var(--text-dim)] hover:text-[var(--accent-teal)] transition-colors"
+                >
+                  <SocialIcon platform={s.platform} />
+                  {s.label}
+                </a>
+              </span>
+            ))}
+          </nav>
+
+        </div>
       </div>
     </SectionCard>
   );
