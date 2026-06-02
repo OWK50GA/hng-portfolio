@@ -39,6 +39,10 @@ export interface HngProject {
   /** Optional: score or outcome note */
   scoreNote?: string;
   type: "individual" | "team";
+  /** GitHub repository URL */
+  githubUrl: string;
+  /** Optional: live/deployed URL */
+  liveUrl?: string;
 }
 
 // ─── Featured Deep Dive ──────────────────────────────────────────────────────
@@ -98,6 +102,7 @@ export interface DesignDoc {
   concept: DocConcept;
   /** External link to the document (Google Docs, Notion, GitHub, etc.) */
   link: string;
+  summary: string;
   /** Full description — shown truncated on card, expanded in modal */
   description: string;
 }
@@ -167,6 +172,7 @@ export const portfolioData: PortfolioData = {
       description: "Built a REST API endpoint that accepts a name query parameter, calls the external Genderize API, and returns a processed response including gender, probability, sample size, and a computed is_confident flag — true only when probability ≥ 0.7 and sample size ≥ 100. Handled edge cases including null gender responses, zero counts, upstream failures, and CORS. First production-style API with strict response contracts and automated grading.",
       tech: ["Node.js", "Express.js"],
       type: "individual",
+      githubUrl: "https://github.com/InsightaLabs/insighta-backend",
     },
     {
       stage: "1",
@@ -176,6 +182,7 @@ export const portfolioData: PortfolioData = {
       description: "Extended Stage 0 by integrating three external APIs simultaneously — Genderize, Agify, and Nationalize. For each name, the system fetches gender probability, predicted age, and top nationality, applies classification logic (age groups: child/teenager/adult/senior), and persists the result to a database. Implemented idempotency so duplicate names return the existing record rather than creating new entries. Added full CRUD endpoints with filtering by gender, country, and age group.",
       tech: ["Node.js", "Express.js", "PostgreSQL"],
       type: "individual",
+      githubUrl: "https://github.com/InsightaLabs/insighta-backend",
     },
     {
       stage: "2",
@@ -185,7 +192,8 @@ export const portfolioData: PortfolioData = {
       description:
         `Upgraded the profile system into a proper query engine for Insighta Labs, a fictional demographic intelligence company. Implemented combined multi-field filtering (gender, age range, country, probability thresholds), multi-field sorting, and cursor-based pagination — all combinable in a single request. The centrepiece was a rule-based natural language parser: plain English queries like "young males from Nigeria" are parsed into structured filters without any AI or LLMs. Seeded the database with 2,026 profiles from a provided JSON file. First stage that felt like real backend engineering`,
       tech: ["Node.js", "Express.js", "PostgreSQL"],
-      type: "individual"
+      type: "individual",
+      githubUrl: "https://github.com/InsightaLabs/insighta-web-portal",
     },
     {
       stage: "3",
@@ -195,7 +203,8 @@ export const portfolioData: PortfolioData = {
       description:
         "Transformed the profile system into a multi-interface platform with real security. Implemented GitHub OAuth with PKCE flow for both CLI and browser clients, short-lived access tokens with refresh token rotation, and role-based access control enforcing admin vs. analyst permissions across every endpoint. Built a globally installable CLI tool persisting credentials at ~/.insighta/credentials.json, a web portal with HTTP-only cookies and CSRF protection, API versioning, CSV export, rate limiting, and request logging. Three separate repos (backend, CLI, web portal) all integrated to the same system. Score: 76/100 — the hardest stage personally.",
       tech: ["GitHub OAuth", "PKCE", "RBAC"],
-      type: "individual"
+      type: "individual",
+      githubUrl: "https://github.com/InsightaLabs/insighta-cli"
     },
     {
       stage: "4b",
@@ -210,7 +219,8 @@ export const portfolioData: PortfolioData = {
       //   { label: "cached hit", before: "—", after: "70ms" },
       //   { label: "DB load", before: "high", after: "−40%" },
       // ],
-      type: "individual"
+      type: "individual",
+      githubUrl: "https://github.com/InsightaLabs/insighta-backend"
     },
     {
       stage: "5",
@@ -221,6 +231,7 @@ export const portfolioData: PortfolioData = {
         `For EnergyIQ — a solar inverter monitoring platform — the original design had the frontend polling the backend, which in turn polled external inverter APIs (Victron, Growatt, Deye/Sunsynk) on every request. Replaced this with a proper event-driven flow: a single background polling service fetches inverter data and publishes updates to Redis channels named by inverter ID. An SSE endpoint lets each client open a persistent connection and subscribe to their inverter's channel, receiving updates as they arrive. Wrote the RFC before touching any code, documented the divergences during implementation, and handled the "curveball" scope change under deadline pressure in Stage 5b.`,
       tech: ["Redis pub/sub", "SSE"],
       type: "team",
+      githubUrl: "https://github.com/hngprojects/energy-iq-api/tree/dev/src/modules/metrics-stream"
     },
     {
       stage: "6",
@@ -231,6 +242,7 @@ export const portfolioData: PortfolioData = {
         "Team stage built on top of the Stage 5 streaming architecture. Implemented an AlertDetectionService subscribed to the inverter:* Redis pattern channel — meaning it receives every inverter update across all users. On each message, the service inspects the data payload for abnormal readings (voltage out of range, battery critically low, unexpected status codes), and dispatches alerts to the relevant user if thresholds are breached. Integrated with the existing SSE and notification infrastructure. Delivered working implementation with tests, structured logging, and edge case documentation. Personal lesson: not dividing the team task well upfront meant carrying most of the implementation alone — resulted in scrappy work near deadline.",
       tech: ["Pattern pub/sub"],
       type: "team",
+      githubUrl: "https://github.com/hngprojects/energy-iq-api/pull/38"
     },
     {
       stage: "8a",
@@ -240,7 +252,8 @@ export const portfolioData: PortfolioData = {
       description:
         " Built a resilience layer for unreliable external API calls. POST /request returns immediately with a pending ID; a background worker loop (waking every ~500ms) picks up due requests and executes them. Backoff doubles each retry (1s → 2s → 4s → 8s → 16s) with per-attempt jitter in the [0.8, 1.2) range. Retries on 5xx responses, timeouts, and network errors; 4xx responses are terminal and never retried. Full attempt history is persisted alongside each request record. Requests that exhaust maxRetries are dead-lettered and never touched again. Spent more time thinking through the design than writing the code — and it showed in the implementation.",
       tech: ["SQLite", "Exponential backoff"],
-      type: "individual"
+      type: "individual",
+      githubUrl: "https://github.com/OWK50GA/retry_engine"
     },
   ],
 
@@ -258,7 +271,7 @@ export const portfolioData: PortfolioData = {
       Instead, my solution was to replace this with a proper event-driven flow: a single background polling service fetches inverter data and publishes updates to Redis channels named by inverterID. 
       In turn, an SSE endpoint lets each client open a persisten connection to subscribe to their inverter's channel, and receive updates as they arrive. I wrote the RFC before touching any code, and docoumented
       divergences during implementation.
-      This turned out to be a very influential change, given that many of the systems are now built around it, and the pubsub flow makes it easy to get data
+      This turned out to be a very influential change, given that many of the systems in EnergyIQ are now built around it, and the pubsub flow makes it easy to get data. The Alert Detection for instance builds on the polling service, through pattern pubsub
       External API calls go from O(N clients) to O(N inverters). Those are very different numbers. You might have 500 clients but only 200 unique inverters. And more importantly, if one inverter has 50 people
        watching it (a business owner, their accountant, their technician, etc.), that inverter still only gets polled once, and published to the same channel anyway.
       `,
@@ -304,33 +317,36 @@ export const portfolioData: PortfolioData = {
 
   designDocs: [
     {
-      title: "RFC-001: Canonical Query Normalisation for Cache Key Consistency",
-      concept: "RFC",
-      link: "https://github.com/wilfrid-k",
+      title: "Stage 4a: Scaling Insighta Labs+: System Design Under Growth",
+      concept: "System Design",
+      link: "https://docs.google.com/document/d/1vc6Jf647_jhW6CmS5eNLwT91EIZb1E3YkgDtXXEGSPA/edit?tab=t.0#heading=h.x8hn4xkr353c",
+      summary: "Architecture document for evolving a demographic intelligence platform from millions to tens of millions of records while maintaining near-interactive query response times.",
       description:
-        "This RFC proposes a canonical query normalisation strategy to address cache key fragmentation in the filtered/sorted API endpoints. The core problem is that semantically identical queries — differing only in parameter ordering or whitespace — generate distinct cache keys, resulting in near-zero Redis cache hit rates despite a correctly configured cache layer. The proposal defines a deterministic normalisation algorithm: sort query parameters alphabetically, strip leading and trailing whitespace from both keys and values, and lower-case all keys before hashing. The document covers the failure mode in depth, presents benchmark data showing cache hit rates below 5% before the fix, and argues why normalisation at the application layer (rather than at the cache or database layer) is the correct boundary. It also addresses edge cases: boolean coercion, array parameters, and pagination tokens that must not be normalised. The RFC concludes with a migration plan and a rollout strategy that allows gradual adoption without invalidating existing cache entries.",
+        "Produced a full system design document for scaling Insighta Labs+ under sustained growth — hundreds to low thousands of queries per minute, a dataset growing from millions to tens of millions of profiles, multiple concurrent teams. Defined functional and non-functional requirements, designed the component architecture with justified decisions (indexing strategy, caching layer, query normalization, connection pooling), mapped the complete data flow from ingestion through query execution to result delivery, and documented trade-offs and limitations honestly. Every component had a reason; nothing was added speculatively. Presented to mentors — received recognition for decisions that were practical, measurable, and actually reflected in implementation results.",
     },
     {
-      title: "RFC-002: Event-Driven Alert Detection via Redis Pattern Subscriptions",
+      title: "Stage 5: Real-Time Inverter Data Streaming",
       concept: "RFC",
-      link: "https://github.com/wilfrid-k",
+      link: "https://docs.google.com/document/d/1M2Inm44CkelMJdM9lWHfvu-inWrBLpK5eNTiuCvYx60/edit?tab=t.0",
+      summary: "Engineering proposal replacing client-side polling with a Redis pub/sub and SSE architecture for EnergyIQ's inverter monitoring platform.",
       description:
-        "This RFC designs the alert detection subsystem for Stage 6, replacing a polling-based approach with a Redis pattern subscription architecture. The document opens with a critique of the existing polling loop: fixed 500ms intervals created unnecessary database load under low-event conditions and introduced unacceptable latency spikes under high-event conditions. The proposed design subscribes the alert service to the `Inserter.*` Redis channel pattern, allowing it to react to any event published by the Inserter service family without coupling the two services directly. The RFC specifies the message envelope schema, the deduplication window (5-second sliding window backed by a Redis sorted set), and the dead-letter strategy for events that fail alert evaluation. A separate section covers operational concerns: how to drain the subscription queue on graceful shutdown, how to handle Redis reconnection, and how to emit structured logs for each alert evaluation cycle. The RFC also documents the team task-division issue encountered during implementation and what was deliberately descoped.",
+        "Wrote a full RFC before touching any implementation code — the problem statement, proposed solution, cross-track impact on frontend and PM scope, two alternatives considered and why they were rejected, the API contract (SSE endpoint shape, channel naming convention, event payload structure), risks, open questions, and definition of done. The core argument: polling creates an O(N clients) pressure on external inverter APIs, while a single background poller publishing to Redis reduces that to O(N inverters) and decouples data freshness from connection count entirely. Documented mid-implementation divergences from the RFC rather than silently changing direction. Also produced a system design document with architectural diagram.",
     },
     {
-      title: "RFC-003: Retry Engine with Exponential Backoff and Dead-Letter Queue",
-      concept: "RFC",
-      link: "https://github.com/wilfrid-k",
+      title: "Stage 6: Inverter Alert Detection",
+      concept: "System Design",
+      link: "https://docs.google.com/document/d/1_k474GN6N1yEGgi7cthzlt7Sl-9uuCVU4LgXEpsNnMw/edit?tab=t.0",
+      summary: "Architecture document for a pattern-subscribed alert detection service that monitors all inverter data streams and dispatches user notifications on anomalies.",
       description:
-        "This RFC specifies the retry engine built during Stage 8a. The document starts from first principles: why naive immediate retries are harmful (thundering herd, cascading failures), and why a well-designed retry system needs three things — bounded retry count, randomised backoff with jitter, and a terminal state for permanently failed jobs. The proposed engine uses full jitter exponential backoff (base 200ms, multiplier 2×, cap 30s, ±25% jitter), a configurable maximum retry count per job type, and 4xx terminal logic that immediately moves non-retriable HTTP errors to the dead-letter queue without consuming retry budget. The RFC defines the SQLite schema for the worker state table, the tick interval for the worker loop, and the concurrency model (single-process, single-thread, explicit serialisation). It also covers the dead-letter queue consumer contract: what metadata is preserved, how to replay a dead-lettered job manually, and how to emit alerting signals when the DLQ depth crosses a threshold. Appendices include the full backoff formula and a comparison against three alternative libraries that were evaluated and rejected.",
+        "Produced the system design document for the team's alert detection feature built on top of the Stage 5 streaming infrastructure. Documented the architecture decision to use Redis pattern pub/sub (inverter:*) rather than individual channel subscriptions — allowing the AlertDetectionService to receive every inverter update across all users in a single listener without managing per-inverter subscriptions explicitly. Covered the data flow from inverter poll → Redis publish → alert detection → notification dispatch, defined threshold logic for anomaly detection, specified failure handling strategy, and documented scaling considerations. Included architectural diagram, trade-offs, and what the team would improve with more time.",
     },
-    {
-      title: "RFC-004: PKCE OAuth Flow with JWT Rotation and RBAC Policy Engine",
-      concept: "RFC",
-      link: "https://github.com/wilfrid-k",
-      description:
-        "This RFC documents the authentication and authorisation system designed and implemented in Stage 3. It covers the full GitHub OAuth PKCE flow from code challenge generation through token exchange, explains why PKCE was chosen over implicit flow for the CLI client (no redirect URI), and specifies the JWT rotation strategy: short-lived access tokens (15 minutes), long-lived refresh tokens (7 days) stored as opaque references in the database, and automatic rotation on every refresh. The RBAC section defines the policy model: roles are hierarchical, permissions are additive, and a central policy engine evaluates every protected route before handler execution. The RFC includes the full permission matrix for the three built-in roles (viewer, editor, admin), the rate limiting strategy (per-IP sliding window for auth endpoints, per-user token bucket for API endpoints), and the bcrypt work factor selection rationale. A post-mortem section documents the Technical Requirements Document that was missed during submission and what would have been done differently.",
-    },
+    // {
+    //   title: "RFC-004: PKCE OAuth Flow with JWT Rotation and RBAC Policy Engine",
+    //   concept: "RFC",
+    //   link: "https://github.com/wilfrid-k",
+    //   description:
+    //     "This RFC documents the authentication and authorisation system designed and implemented in Stage 3. It covers the full GitHub OAuth PKCE flow from code challenge generation through token exchange, explains why PKCE was chosen over implicit flow for the CLI client (no redirect URI), and specifies the JWT rotation strategy: short-lived access tokens (15 minutes), long-lived refresh tokens (7 days) stored as opaque references in the database, and automatic rotation on every refresh. The RBAC section defines the policy model: roles are hierarchical, permissions are additive, and a central policy engine evaluates every protected route before handler execution. The RFC includes the full permission matrix for the three built-in roles (viewer, editor, admin), the rate limiting strategy (per-IP sliding window for auth endpoints, per-user token bucket for API endpoints), and the bcrypt work factor selection rationale. A post-mortem section documents the Technical Requirements Document that was missed during submission and what would have been done differently.",
+    // },
   ],
 
   reflections: [

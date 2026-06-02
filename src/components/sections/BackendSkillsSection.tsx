@@ -23,7 +23,7 @@ export function BackendSkillsSection({ skills }: BackendSkillsSectionProps) {
           <div key={group.category}>
             {/* Category name + stage ref pills on same line */}
             <div className="flex flex-wrap items-center gap-2 mb-2">
-              <span className="font-mono text-xs text-[var(--text-dim)] uppercase">
+              <span className="font-mono text-sm font-semibold text-[var(--text-primary)] uppercase tracking-wide">
                 {group.category}
               </span>
               {group.stageRefs.map((ref) => (

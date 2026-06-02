@@ -4,6 +4,23 @@ import type { HngProject } from "@/data/hng-projects";
 import { useEffect } from "react";
 import MetricRow from "./MetricRow";
 import { TechBadge } from "./TechBadge";
+import { GitHubIcon } from "./icons/GitHubIcon";
+
+function ExternalLinkIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="12"
+      height="12"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path d="M14 3h7v7h-2V6.414l-9.293 9.293-1.414-1.414L17.586 5H14V3zM5 5h6v2H7v10h10v-4h2v6H5V5z" />
+    </svg>
+  );
+}
 
 interface ProjectModalProps {
   project: HngProject;
@@ -86,12 +103,36 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
 
         {/* Score note */}
         {project.scoreNote && (
-          <div className="mt-auto pt-4 border-t border-[var(--border-neutral)]">
+          <div className="pt-4 border-t border-[var(--border-neutral)]">
             <span className="font-mono text-xs text-[var(--text-dim)]">
               Score: {project.scoreNote}
             </span>
           </div>
         )}
+
+        {/* Links */}
+        <div className="mt-4 pt-4 border-t border-[var(--border-neutral)] flex items-center gap-4">
+          <a
+            href={project.githubUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 font-mono text-xs text-[var(--text-dim)] hover:text-[var(--accent-teal)] transition-colors"
+          >
+            <GitHubIcon />
+            GitHub
+          </a>
+          {project.liveUrl && (
+            <a
+              href={project.liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 font-mono text-xs text-[var(--text-dim)] hover:text-[var(--accent-teal)] transition-colors"
+            >
+              <ExternalLinkIcon />
+              Live demo
+            </a>
+          )}
+        </div>
       </div>
     </div>
   );
