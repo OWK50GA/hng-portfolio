@@ -32,7 +32,7 @@ export function ProjectCardClient({ project }: ProjectCardClientProps) {
         </h3>
 
         <p className="text-sm text-[var(--text-secondary)] line-clamp-3">
-          {project.description}
+          {project.summary}
         </p>
 
         {project.metrics !== undefined && project.metrics.length > 0 && (

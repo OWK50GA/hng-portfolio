@@ -50,7 +50,7 @@ export function FeaturedDeepDiveSection({
     <>
       <SectionCard
         accent="teal-dim"
-        heading="FEATURED DEEP DIVE"
+        heading="FEATURED PROJECT DEEP DIVE"
         headingSize="lg"
         subtitle={deepDive.sectionTitle}
       >
