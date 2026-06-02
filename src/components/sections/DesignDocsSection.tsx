@@ -32,7 +32,7 @@ function DesignDocCard({
 
       {/* Description — truncated */}
       <p className="text-sm text-[var(--text-secondary)] line-clamp-3 flex-1">
-        {doc.description}
+        {doc.summary}
       </p>
 
       {/* Footer row: See more + View doc link */}

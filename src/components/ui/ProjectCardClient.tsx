@@ -5,6 +5,24 @@ import { useState } from "react";
 import MetricRow from "./MetricRow";
 import { ProjectModal } from "./ProjectModal";
 import { TechBadge } from "./TechBadge";
+import { GitHubIcon } from "./icons/GitHubIcon";
+
+// Simple external link icon (no extra dependency)
+function ExternalLinkIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="12"
+      height="12"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path d="M14 3h7v7h-2V6.414l-9.293 9.293-1.414-1.414L17.586 5H14V3zM5 5h6v2H7v10h10v-4h2v6H5V5z" />
+    </svg>
+  );
+}
 
 interface ProjectCardClientProps {
   project: HngProject;
@@ -45,8 +63,33 @@ export function ProjectCardClient({ project }: ProjectCardClientProps) {
           </span>
         )}
 
-        {/* See more button */}
-        <div className="mt-auto pt-2 flex justify-end">
+        {/* Footer: links left, See more right */}
+        <div className="mt-auto pt-2 flex items-center justify-between gap-2">
+          {/* GitHub + optional live link */}
+          <div className="flex items-center gap-3">
+            <a
+              href={project.githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[var(--text-dim)] hover:text-[var(--accent-teal)] transition-colors"
+              aria-label={`${project.title} GitHub repository`}
+            >
+              <GitHubIcon />
+            </a>
+            {project.liveUrl && (
+              <a
+                href={project.liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 font-mono text-[10px] text-[var(--text-dim)] hover:text-[var(--accent-teal)] transition-colors"
+                aria-label={`${project.title} live demo`}
+              >
+                <ExternalLinkIcon />
+                live
+              </a>
+            )}
+          </div>
+
           <button
             type="button"
             onClick={() => setOpen(true)}
