@@ -45,12 +45,13 @@ export interface HngProject {
 
 export interface DeepDive {
   stageRef: string; // e.g. "4b"
-  sectionTitle: string; // e.g. "Stage 4b: Query Optimization"
+  sectionTitle: string; // e.g. "Stage 4b: Query Optimization",
+  background: string;
   problem: string; // paragraph(s)
   whatChanged: string; // paragraph(s)
-  metrics: Metric[];
-  keyChallenge: string;
-  solution: string;
+  // metrics: Metric[];
+  // keyChallenge: string;
+  // solution: string;
 }
 
 // ─── Backend Skill ───────────────────────────────────────────────────────────
@@ -241,60 +242,26 @@ export const portfolioData: PortfolioData = {
       tech: ["SQLite", "Exponential backoff"],
       type: "individual"
     },
-    // ── Compact pill stages ───────────────────────────────────────────────
-    // {
-    //   stage: "0",
-    //   depth: "pill",
-    //   title: "Orientation",
-    //   description: "",
-    //   tech: [],
-    // },
-    // {
-    //   stage: "1",
-    //   depth: "pill",
-    //   title: "Basic CRUD",
-    //   description: "",
-    //   tech: [],
-    // },
-    // {
-    //   stage: "4a",
-    //   depth: "pill",
-    //   title: "Design doc",
-    //   description: "",
-    //   tech: [],
-    // },
-    // {
-    //   stage: "5b",
-    //   depth: "pill",
-    //   title: "RFC / curveball",
-    //   description: "",
-    //   tech: [],
-    // },
-    // {
-    //   stage: "7b",
-    //   depth: "pill",
-    //   title: "This portfolio (spec)",
-    //   description: "",
-    //   tech: [],
-    // },
   ],
 
   deepDive: {
-    stageRef: "4b",
-    sectionTitle: "Stage 4b: Query Optimization",
+    stageRef: "5",
+    sectionTitle: "Stage 5: Real-Time Inverter Streaming (EnergyIQ)",
+    background: "EnergyIQ is a platform that turns solar inverter system data into actionable financial and optimization intelligence for users",
     problem:
-      "PostgreSQL queries on the filtered/sorted endpoint were consistently slow under real data volumes. Cold query times hit 1200ms — well above the 300ms target. No indexes existed on the filter columns, and repeated identical queries hit the database every time.",
+      `
+      The design of EnergyIQ put it that to get user data, the frontend polls the backend, and then the backend makes a request to the inverter API to get the data for the user's registered inverter.
+      This works for one or two users, but as a systems architect, I thought about the effect this would have when EnergyIQ grows to many users. \n The frontend having to poll the backend, and the backend in turn making request to the inverter API is hell at scale, and the system is likely to crumble under that load. There is a polling inefficiency there. N clients triggering N api calls, and the backend in turn making N API calls to respond is hell to think about.
+      `,
     whatChanged:
-      "Added composite indexes on the most-queried filter columns. Introduced a Redis cache layer with a 5-minute TTL. Implemented canonical query normalisation so that semantically identical queries (different key ordering, whitespace) map to the same cache key.",
-    metrics: [
-      { label: "cold query", before: "1200ms", after: "230ms" },
-      { label: "cached hit", before: "—", after: "70ms" },
-      { label: "DB load", before: "high", after: "−40%" },
-    ],
-    keyChallenge:
-      "The same query expressed with different parameter ordering produced different cache keys, causing near-zero cache hit rates even after Redis was wired in.",
-    solution:
-      "Canonical query normalisation: sort query parameters alphabetically and strip whitespace before hashing. Cache hit rate jumped from under 5% to over 60% within the same test run.",
+      `
+      Instead, my solution was to replace this with a proper event-driven flow: a single background polling service fetches inverter data and publishes updates to Redis channels named by inverterID. 
+      In turn, an SSE endpoint lets each client open a persisten connection to subscribe to their inverter's channel, and receive updates as they arrive. I wrote the RFC before touching any code, and docoumented
+      divergences during implementation.
+      This turned out to be a very influential change, given that many of the systems are now built around it, and the pubsub flow makes it easy to get data
+      External API calls go from O(N clients) to O(N inverters). Those are very different numbers. You might have 500 clients but only 200 unique inverters. And more importantly, if one inverter has 50 people
+       watching it (a business owner, their accountant, their technician, etc.), that inverter still only gets polled once, and published to the same channel anyway.
+      `,
   },
 
   skills: [
