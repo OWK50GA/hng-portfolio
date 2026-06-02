@@ -11,7 +11,7 @@ interface StagePillProps {
 export function StagePill({ stage, label }: StagePillProps) {
   return (
     <span className="inline-flex items-center gap-1.5 rounded-full border border-[var(--accent-teal)]/20 bg-[var(--bg-card)] px-2.5 py-1 font-mono text-xs text-[var(--text-dim)]">
-      Stage {stage} — {label}
+      Stage {stage} {label ? - label: ""}
     </span>
   );
 }
