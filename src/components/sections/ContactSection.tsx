@@ -4,6 +4,7 @@
 // Req 13.3: neutral SectionAccent
 
 import {
+  DevToIcon,
   EmailIcon,
   GitHubIcon,
   LinkedInIcon,
@@ -26,6 +27,8 @@ function SocialIcon({ platform }: { platform: string }) {
       return <EmailIcon />;
     case "twitter":
       return <TwitterIcon />;
+    case "devto":
+      return <DevToIcon />;
     default:
       return null;
   }

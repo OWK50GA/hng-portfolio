@@ -78,7 +78,7 @@ export interface ReflectionEntry {
 
 // ─── Social Link ─────────────────────────────────────────────────────────────
 
-export type SocialPlatform = "github" | "linkedin" | "email" | "twitter";
+export type SocialPlatform = "github" | "linkedin" | "email" | "twitter" | "devto";
 
 export interface SocialLink {
   platform: SocialPlatform;
@@ -159,6 +159,11 @@ export const portfolioData: PortfolioData = {
         href: "mailto:wilfridokorie@gmail.com",
         label: "Email",
       },
+      {
+        platform: "devto",
+        href: "https://dev.to/wilfridk",
+        label: "Dev.to"
+      }
     ],
   },
 
@@ -413,5 +418,10 @@ export const portfolioData: PortfolioData = {
       href: "https://x.com/WilfridOkorie",
       label: "Twitter",
     },
+    {
+      platform: "devto",
+      href: "https://dev.to/wilfridk",
+      label: "Dev.to"
+    }
   ],
 };
